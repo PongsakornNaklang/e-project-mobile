@@ -1,19 +1,26 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import { ChatScreen } from './screens/ChatScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { HomeScreen } from './screens/HomeScreen';
+import { createDrawerNavigator, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { HomeStackNavigator } from './Navigator/HomeStackNavigator';
+import { SettingScreen } from './screens/SettingScreen';
+import { Text } from 'react-native';
+import { HeadDrawerContent } from './components/HeadDrawerContent';
 
-const Stack = createStackNavigator();
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ ...TransitionPresets.SlideFromRightIOS }} >
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Chat" component={ChatScreen} options={{ title: 'Chat of G40' }} />
-      </Stack.Navigator>
+      <Drawer.Navigator
+        initialRouteName="Home"
+        drawerContent={props => <HeadDrawerContent {...props} />}
+      >
+        <Drawer.Screen name="Home" component={HomeStackNavigator} />
+        <Drawer.Screen name="QR code" component={HomeStackNavigator} />
+        <Drawer.Screen name="Setting" component={SettingScreen} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }

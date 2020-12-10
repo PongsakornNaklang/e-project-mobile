@@ -1,23 +1,28 @@
-import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View, TextInput, Button, Text, TouchableHighlight } from 'react-native'
+import React, { useState } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, View, TextInput, Button, Text, TouchableHighlight, TouchableNativeFeedback, KeyboardAvoidingView, Platform } from 'react-native'
 import { ChatBubble } from '../components/ChatBubble'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export const ChatScreen = (props) => {
+    const [scrollview, setScrollview] = useState(null)
+
+    const scrollToEnd = () => {
+        scrollview.scrollToEnd({ animated: true });
+    }
+
     return (
+
         <View style={{
             flex: 1,
             backgroundColor: 'white',
             height: '100%',
             width: '100%',
         }}>
-            {/* <Button title='Back' />
-            <View style={styles.header}>
-                <Text style={{ color: '#333', fontSize: 16 }}>GROP 40</Text>
-            </View> */}
             <SafeAreaView style={styles.container}>
-                <ScrollView style={styles.scrollView}>
+                <ScrollView style={styles.scrollView} ref={(scrollView) => { setScrollview(scrollView) }} showsVerticalScrollIndicator={false} keyboardDismissMode={'on-drag'}>
+
                     <ChatBubble image={require('../assets/icon.png')} text="Hi ✋ " mine time="14:30" />
                     <ChatBubble text="Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii how are you? 😁" sender="Bank" time="14:31" />
                     <ChatBubble text="What r u doing?" mine time="14:33" />
@@ -33,17 +38,20 @@ export const ChatScreen = (props) => {
                     <ChatBubble text="me too " mine time="14:45" />
                     <ChatBubble text="work a project 😂" sender="Bank" time="14:46" />
                     <ChatBubble text="me too " mine time="14:47" />
+
                 </ScrollView>
             </SafeAreaView>
+
             <View style={styles.input_container}>
-                <TouchableHighlight onPress={() => alert('Choose image')} underlayColor='#999'>
+                <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#999', true)} onPress={() => alert('Choose image')} >
                     <View>
                         <FontAwesomeIcon icon={faImage} color='#777' size={20} />
                     </View>
-                </TouchableHighlight>
-                <TextInput placeholder="massage" style={styles.input} />
+                </TouchableNativeFeedback>
+                <TextInput placeholder="massage" multiline style={styles.input} onLayout={() => scrollToEnd()} />
 
             </View>
+
         </View>
     )
 }

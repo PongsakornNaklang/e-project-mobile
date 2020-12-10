@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const ChatListScreen = () => {
+export const NotificationScreen = () => {
     return (
         <div>
             
