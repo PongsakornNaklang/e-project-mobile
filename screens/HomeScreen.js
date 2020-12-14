@@ -1,10 +1,12 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableNativeFeedback, Button } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TouchableNativeFeedback, Button, Image } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faComment, faBars, faBell } from '@fortawesome/free-solid-svg-icons'
-import UserAvatar from 'react-native-user-avatar';
-import { MeetSwiper } from '../components/MeetSwiper';
-import { NotificationSwiper } from '../components/NotificationSwiper';
+import { MeetSwiper } from './../components/MeetSwiper';
+import { NotificationSwiper } from './../components/NotificationSwiper';
+import { ScrollView } from 'react-native-gesture-handler';
+import { ProjectCard } from '../components/ProjectCard';
+import { AssignmentSwiper } from '../components/AssignmentSwiper';
 
 export const HomeScreen = ({ navigation }) => {
     return (
@@ -15,9 +17,13 @@ export const HomeScreen = ({ navigation }) => {
                         <FontAwesomeIcon icon={faBars} size={25} color='#333' />
                     </View>
                 </TouchableNativeFeedback>
-                <Text>E-PROJECT</Text>
+                <View style={styles.logo_container}>
+                    <Image style={styles.logo} source={require('./../assets/logo.png')} />
+                    <Text>E-PROJECT</Text>
+                </View>
+
                 <View style={styles.icon_right}>
-                    <TouchableNativeFeedback onPress={() => navigation.push('Chat')} background={TouchableNativeFeedback.Ripple('#777', true)} >
+                    <TouchableNativeFeedback onPress={() => navigation.push('Notification')} background={TouchableNativeFeedback.Ripple('#777', true)} >
                         <View style={styles.icon_button}>
                             <FontAwesomeIcon icon={faBell} size={25} color='#333' />
                         </View>
@@ -30,8 +36,12 @@ export const HomeScreen = ({ navigation }) => {
                 </View>
             </View>
             <SafeAreaView style={styles.body}>
-                <MeetSwiper />
-                <NotificationSwiper />
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <ProjectCard />
+                    <MeetSwiper />
+                    <AssignmentSwiper />
+                    {/* <NotificationSwiper /> */}
+                </ScrollView>
             </SafeAreaView>
         </View>
     )
@@ -41,6 +51,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+    logo: { 
+        width: 33, 
+        height: 33, 
+        marginHorizontal: 10 
+    },
+    logo_container : { 
+        flexDirection: 'row', 
+        alignItems: 'center' 
     },
     avatar: {
         width: 50,
@@ -69,11 +88,12 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        maxHeight: 120,
+        maxHeight: 130,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 5
+        padding: 5,
+        marginBottom: -30
     },
     body: {
         flex: 1,

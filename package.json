@@ -26,6 +26,7 @@
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-size-matters": "^0.3.1",
+    "react-native-step-indicator": "^1.0.3",
     "react-native-svg": "^12.1.0",
     "react-native-user-avatar": "^1.0.7",
     "react-native-web": "~0.13.12",

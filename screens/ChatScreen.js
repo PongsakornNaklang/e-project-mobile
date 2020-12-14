@@ -23,7 +23,7 @@ export const ChatScreen = (props) => {
             <SafeAreaView style={styles.container}>
                 <ScrollView style={styles.scrollView} ref={(scrollView) => { setScrollview(scrollView) }} showsVerticalScrollIndicator={false} keyboardDismissMode={'on-drag'}>
 
-                    <ChatBubble image={require('../assets/icon.png')} text="Hi ✋ " mine time="14:30" />
+                    <ChatBubble image={require('../assets/logo.png')} text="Hi ✋ " mine time="14:30" />
                     <ChatBubble text="Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii how are you? 😁" sender="Bank" time="14:31" />
                     <ChatBubble text="What r u doing?" mine time="14:33" />
                     <ChatBubble text="work a project 😂" sender="Bank" time="14:34" />

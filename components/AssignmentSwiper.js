@@ -1,27 +1,22 @@
 import React from 'react'
 import { View, Text, Animated, TouchableNativeFeedback, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCalendarAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faFileSignature } from '@fortawesome/free-solid-svg-icons'
 
-export const MeetSwiper = () => {
+export const AssignmentSwiper = () => {
     return (
         <View>
-            <Text style={{ marginLeft: 20 }}>Appointment</Text>
+            <Text style={{ marginLeft: 20 }}>Assignment</Text>
             <Animated.ScrollView
                 style={styles.scroll_view}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 scrollEventThrottle={5}
             >
-                <TouchableWithoutFeedback onPress={() => alert('Meet')} useForeground={true} background={TouchableNativeFeedback.Ripple('#777', true)}>
-                    <View style={styles.card} >
-                        <FontAwesomeIcon icon={faPlus} size={24} color='white' style={{ marginBottom: 5 }} />
-                    </View>
-                </TouchableWithoutFeedback>
-                <TouchableNativeFeedback onPress={() => alert('Meet')} useForeground={true} background={TouchableNativeFeedback.Ripple('#777', true)}>
-                    <View style={[styles.card, { backgroundColor: '#3a8381' }]} >
-                        <FontAwesomeIcon icon={faCalendarAlt} size={24} color='white' style={{ marginBottom: 5 }} />
-                        <Text style={{ color: '#fff', fontWeight: 'bold' }}>@C1 building</Text>
+                <TouchableNativeFeedback onPress={() => alert('Assignment')} useForeground={true} background={TouchableNativeFeedback.Ripple('#777', true)}>
+                    <View style={[styles.card, { backgroundColor: '#6666ff' }]} >
+                        <FontAwesomeIcon icon={faFileSignature} size={24} color='white' style={{ marginBottom: 5 }} />
+                        <Text style={{ color: '#fff', fontWeight: 'bold' }}>Homework D01</Text>
                         <Text style={{ color: '#fff', fontSize: 12 }}>7 Dec 2020</Text>
                         <Text style={{ color: '#fff', fontSize: 12 }}>13:00</Text>
                     </View>

@@ -16,8 +16,8 @@ export const NotificationSwiper = () => {
                 <View style={[styles.card, { backgroundColor: '#6666ff' }]} >
                     <FontAwesomeIcon icon={faBell} size={24} color='white' style={{ marginBottom: 5 }} />
                     <Text style={{ color: '#fff', fontWeight: 'bold' }}>New Notify</Text>
-                    <Text style={{ color: '#fff', fontSize: 12 }}>7 Dec 2020</Text>
-                    <Text style={{ color: '#fff', fontSize: 12 }}>13:00</Text>
+                    <Text style={{ color: '#fff', fontSize: 12 }}>7 Dec 2020 13:00</Text>
+                    <Text style={{ color: '#fff', fontSize: 12 }}></Text>
                 </View>
                 <View style={styles.card} />
                 <View style={styles.card} />
