@@ -3,7 +3,7 @@ import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navi
 import { View, StyleSheet, Text } from 'react-native'
 import UserAvatar from 'react-native-user-avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faQrcode, faCog, faSignOutAlt, faLayerGroup, faObjectGroup, faUserFriends, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faQrcode, faCog, faSignOutAlt, faUserFriends, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export const DrawerContent = (props) => {
     return (

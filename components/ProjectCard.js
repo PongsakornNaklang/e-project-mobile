@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { SafeAreaView } from 'react-navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faEdit, faCheck } from '@fortawesome/free-solid-svg-icons'
-import StepIndicator from 'react-native-step-indicator';
+import StepIndicator from 'react-native-step-indicator'
+import moment from "moment";
+import { TaskCard } from './TaskCard'
+import { task_dummy } from '../storage/task.dummy'
+import { ScrollView } from 'react-native-gesture-handler'
+import Swiper from 'react-native-swiper'
 
 export const ProjectCard = () => {
+    const [subTasks, setSubTasks] = useState(task_dummy.sub_tasks)
+    const [currentPage, setCurrentPage] = useState(task_dummy.current_week - 1)
 
-    const labels = ["Planning", "Design", "Coding", "Testing", "Deploy"];
+    const labels = ["Planning", "Design", "Coding", "Testing", "Deploy"]
 
     const customStyles = {
         labelAlign: 'flex-start',
@@ -32,43 +39,50 @@ export const ProjectCard = () => {
         currentStepLabelColor: '#fe7013'
     }
 
+    const onStepPress = (position) => {
+        setCurrentPage(position);
+    }
+
+    const renderViewPagerPage = (subtask) => {
+        return (
+            <ScrollView style={{marginHorizontal: 10}}>
+                {subtask.map((task) => {
+                    return <TaskCard key={task.name} title={task.name} des={task.description} completed={task.completed} />
+                })}
+            </ScrollView>
+        );
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>E-Project</Text>
-            
-                <Text style={[styles.title_overview, {paddingHorizontal: 10}]}>Your progress</Text>
-            <View style={{ marginVertical: 20}}>
+
+            <Text style={[styles.title_overview, { paddingHorizontal: 10 }]}>Your progress</Text>
+            <View style={{ marginVertical: 20 }}>
                 <StepIndicator
-                customStyles={customStyles}
-                currentPosition={1}
-                labels={labels}
-                direction={'horizontal'}
-                renderStepIndicator={() => <FontAwesomeIcon icon={faCheck} color={'#fff'} />}
-            />
+                    customStyles={customStyles}
+                    currentPosition={currentPage}
+                    labels={labels}
+                    direction={'horizontal'}
+                    renderStepIndicator={() => <FontAwesomeIcon icon={faCheck} color={'#fff'} />}
+                    // onPress={onStepPress}
+                />
             </View>
-            
-            {/* <View style={{ minHeight: 270, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
-                <View style={{ minWidth: '50%', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}>
-                    <Text>Your progress</Text>
-                    <Text style={{ fontSize: 32 }}>75%</Text>
-                    <Text >to complete</Text>
-                </View>
-
-            </View> */}
-            <View style={styles.card_container}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={styles.title_overview}>Project Overview</Text>
-                    <FontAwesomeIcon style={{ marginHorizontal: 10 }} icon={faEdit} size={14} color={'#333'} />
-                </View>
-
-                <Text style={styles.detail} ellipsizeMode={'tail'} numberOfLines={4}>
-                    {'        '}It is a long established fact that a reader will be distracted by the readable content of a
-                    page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-
-                    less normal distribution of letters, as opposed to using 'Content here, content here', making
-                    it look like readable English. Many desktop publishing packages and web page editors now
-                    use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover</Text>
-            </View>
+            <Text style={{ paddingHorizontal: 10 }}>Week {task_dummy.current_week} ({moment().format('LL')})</Text>
+            <Swiper
+                height={180}
+                loop={false}
+                index={currentPage}
+                autoplay={false}
+                showsButtons={false}
+                showsPagination={false}
+                onIndexChanged={(page) => {
+                    setCurrentPage(page);
+                }}
+            >
+                {subTasks.map((subtask) => renderViewPagerPage(subtask))}
+            </Swiper>
         </SafeAreaView>
     )
 }

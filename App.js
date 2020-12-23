@@ -2,9 +2,9 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { HomeStackNavigator } from './Navigator/HomeStackNavigator';
 import { SettingScreen } from './screens/SettingScreen';
 import { DrawerContent } from './components/DrawerContent';
+import { HomeStackNavigator } from './navigator/HomeStackNavigator';
 
 
 const Drawer = createDrawerNavigator();
