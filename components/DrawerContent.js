@@ -1,11 +1,49 @@
-import React from 'react'
-import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer'
-import { View, StyleSheet, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { DrawerContentScrollView, DrawerItemList, DrawerItem, useIsDrawerOpen } from '@react-navigation/drawer'
+import { View, StyleSheet, Text, AsyncStorage, Alert, Image } from 'react-native'
 import UserAvatar from 'react-native-user-avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faQrcode, faCog, faSignOutAlt, faUserFriends, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faQrcode, faCog, faSignOutAlt, faUserFriends, faSearch, faUserCheck } from '@fortawesome/free-solid-svg-icons';
+import { logout, checkLogin } from '../hooks/Services';
+import { app_config } from '../config/app_config';
+import { Avatar } from 'react-native-paper';
 
 export const DrawerContent = (props) => {
+    const [user, setUser] = useState({})
+    const [project, setProject] = useState({})
+    const isDrawerOpen = useIsDrawerOpen();
+
+    const initData = async () => {
+        const [user_str, project_str] = await Promise.all([
+            AsyncStorage.getItem('user'),
+            AsyncStorage.getItem('project')
+        ])
+
+        console.log(user_str);
+        const user_obj = JSON.parse(user_str)
+        setUser(user_obj)
+
+        console.log(project_str);
+        const project_obj = JSON.parse(project_str)
+        setProject(project_obj)
+    }
+
+    const onLogout = async () => {
+        const isLogout = await logout()
+        
+        const isLogin = await checkLogin()
+        console.log(isLogin);
+        if (isLogout) {
+            props.navigation.navigate('Login', { isLogin: false })
+        } 
+    }
+
+    if (isDrawerOpen) {
+        if (Object.keys(user).length === 0 && Object.keys(project).length === 0) {
+            initData()
+        }
+    }
+
     return (
         <View style={{
             flex: 1,
@@ -14,57 +52,41 @@ export const DrawerContent = (props) => {
         }}>
             <DrawerContentScrollView {...props} >
                 <View style={styles.head}>
-                    <UserAvatar style={styles.avatar} name="Pongsakorn Naklang" />
-                    <Text style={styles.subtitle}>B6074562</Text>
-                    <Text style={styles.title}>Pongsakorn Naklang</Text>
-                    <Text style={styles.title}>Group 40</Text>
+                {
+                    user['avartar'] !== null ? <Avatar.Image size={50} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
+                        : <Avatar.Text size={50} label={user['studentName'][0]} labelStyle={{ fontSize: 14 }} style={{ backgroundColor: 'green' }} />
+                }
+                    {/* <UserAvatar style={styles.avatar} src={user['avartar'] != null ? `${app_config.api}/public/profile/${user['avartar']}`: null} name={user['studentName']}  /> */}
+                    {/* <Image source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} style={{ width: 50, height: 50, borderRadius: 50 }} /> */}
+                    <Text style={styles.subtitle}>{user != null ? user['studentId'] : null}</Text>
+                    <Text style={styles.title}>{user != null ? user['studentName'] : null}</Text>
+                    <Text style={styles.title}>{project != null ? 'G' + String(project['groupNo']).padStart(2, '0') : null}</Text>
                 </View>
                 {/* <DrawerItemList {...props} /> */}
                 <View style={styles.drawer_section}>
                     <DrawerItem
                         icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faHome} size={size} color={color} />
+                            <FontAwesomeIcon icon={faHome} size={size} color={'#3f51b5'} />
                         )}
-                        label="Home"
+                        label="หน้าแรก"
                         onPress={() => { props.navigation.navigate('Home') }}
                     />
                     <DrawerItem
                         icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faSearch} size={size} color={color} />
+                            <FontAwesomeIcon icon={faUserCheck} size={size} color={'#3f51b5'} />
                         )}
-                        label="Search"
-                        onPress={() => { props.navigation.navigate('Search') }}
+                        label="เช็คการเข้าพบที่ปรึกษา"
+                        onPress={() => { props.navigation.navigate('CheckSign') }}
                     />
-                    <DrawerItem
-                        icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faQrcode} size={size} color={color} />
-                        )}
-                        label="QR code"
-                        onPress={() => { props.navigation.navigate('QR code') }}
-                    />
-                    <DrawerItem
-                        icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faUserFriends} size={size} color={color} />
-                        )}
-                        label="My Group"
-                        onPress={() => { props.navigation.navigate('My Group') }}
-                    />
-                    <DrawerItem
-                        icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faCog} size={size} color={color} />
-                        )}
-                        label="Setting"
-                        onPress={() => { props.navigation.navigate('Setting') }}
-                    />
-
                 </View>
             </DrawerContentScrollView>
             <View style={styles.bottom_section}>
                 <DrawerItem
                     icon={({ color, size }) => (
-                        <FontAwesomeIcon icon={faSignOutAlt} size={size} color={color} />
+                        <FontAwesomeIcon icon={faSignOutAlt} size={size} color={'#3f51b5'} />
                     )}
-                    label='Sign out' />
+                    label='ออกจากระบบ'
+                    onPress={onLogout} />
             </View>
         </View>
     )
