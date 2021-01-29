@@ -1,47 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, useIsDrawerOpen } from '@react-navigation/drawer'
 import { View, StyleSheet, Text, AsyncStorage, Alert, Image } from 'react-native'
 import UserAvatar from 'react-native-user-avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faQrcode, faCog, faSignOutAlt, faUserFriends, faSearch, faUserCheck } from '@fortawesome/free-solid-svg-icons';
-import { logout, checkLogin } from '../hooks/Services';
+import { logout, checkLogin } from '../services/Services';
 import { app_config } from '../config/app_config';
 import { Avatar } from 'react-native-paper';
+import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
 
 export const DrawerContent = (props) => {
-    const [user, setUser] = useState({})
-    const [project, setProject] = useState({})
     const isDrawerOpen = useIsDrawerOpen();
-
-    const initData = async () => {
-        const [user_str, project_str] = await Promise.all([
-            AsyncStorage.getItem('user'),
-            AsyncStorage.getItem('project')
-        ])
-
-        console.log(user_str);
-        const user_obj = JSON.parse(user_str)
-        setUser(user_obj)
-
-        console.log(project_str);
-        const project_obj = JSON.parse(project_str)
-        setProject(project_obj)
-    }
-
-    const onLogout = async () => {
-        const isLogout = await logout()
-        
-        const isLogin = await checkLogin()
-        console.log(isLogin);
-        if (isLogout) {
-            props.navigation.navigate('Login', { isLogin: false })
-        } 
-    }
+    const { onLogout } = useContext(AuthContext);
+    const { user, project } = useContext(UserContext);
 
     if (isDrawerOpen) {
-        if (Object.keys(user).length === 0 && Object.keys(project).length === 0) {
-            initData()
-        }
     }
 
     return (
@@ -52,10 +26,10 @@ export const DrawerContent = (props) => {
         }}>
             <DrawerContentScrollView {...props} >
                 <View style={styles.head}>
-                {
-                    user['avartar'] !== null ? <Avatar.Image size={50} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
-                        : <Avatar.Text size={50} label={user['studentName'][0]} labelStyle={{ fontSize: 14 }} style={{ backgroundColor: 'green' }} />
-                }
+                    {
+                        user['avartar'] !== null ? <Avatar.Image size={50} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
+                            : <Avatar.Text size={50} label={user['studentName'][0]} labelStyle={{ fontSize: 14 }} style={{ backgroundColor: 'green' }} />
+                    }
                     {/* <UserAvatar style={styles.avatar} src={user['avartar'] != null ? `${app_config.api}/public/profile/${user['avartar']}`: null} name={user['studentName']}  /> */}
                     {/* <Image source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} style={{ width: 50, height: 50, borderRadius: 50 }} /> */}
                     <Text style={styles.subtitle}>{user != null ? user['studentId'] : null}</Text>
@@ -86,7 +60,7 @@ export const DrawerContent = (props) => {
                         <FontAwesomeIcon icon={faSignOutAlt} size={size} color={'#3f51b5'} />
                     )}
                     label='ออกจากระบบ'
-                    onPress={onLogout} />
+                    onPress={async () => await onLogout()} />
             </View>
         </View>
     )

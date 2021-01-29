@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Title, Text } from 'react-native-paper';
 import { StyleSheet, AsyncStorage, View } from 'react-native';
-import { postselectProgressPercent, postselectProgressOfWeek, postgetCurrentWeek } from '../hooks/Services'
+import { postselectProgressPercent, postselectProgressOfWeek, postgetCurrentWeek } from '../services/Services'
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const ProgressCard = () => {
     const [overAllProgress, setOverAllProgress] = useState()
     const [weekProgreess, setWeekProgress] = useState()
     const [currentWeek, setCurrentWeek] = useState(0)
+
+    
 
 
     const getProgessPercent = async (teamId, callback) => {
@@ -58,21 +61,27 @@ export const ProgressCard = () => {
 
     return (
         <View>
-            <Text>{`📊 ความคืบหน้า (สัปดาห์ที่ ${currentWeek})`}</Text>
+            <Text>{`ความคืบหน้า (สัปดาห์ที่ ${currentWeek})`}</Text>
             <View style={styles.container}>
-                <View style={styles.card}>
+                <LinearGradient
+                    colors={['#5d69be', '#c89feb']}
+                    style={styles.card}
+                >
                     <Title style={styles.title}>{`สัปดาห์นี้ `}</Title>
                     <View style={{ alignItems: 'flex-end' }}>
                         <Title style={styles.text}>{isNaN(weekProgreess) ? 0 + ' %' : weekProgreess + ' %'}</Title>
                     </View>
 
-                </View>
-                <View style={styles.card}>
+                </LinearGradient>
+                <LinearGradient
+                    colors={['#5d69be', '#c89feb']}
+                    style={styles.card}
+                >
                     <Title style={styles.title}>{`ทั้งหมด`}</Title>
                     <View style={{ alignItems: 'flex-end' }}>
                         <Title style={styles.text}>{overAllProgress + ' %'}</Title>
                     </View>
-                </View>
+                </LinearGradient>
             </View>
         </View>
     )

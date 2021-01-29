@@ -1,48 +1,38 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import { View, Text, StyleSheet, SafeAreaView, TouchableNativeFeedback, Image, AsyncStorage, FlatList, RefreshControl, TouchableOpacity, Animated } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBars, faQrcode } from '@fortawesome/free-solid-svg-icons'
 import { ScrollView } from 'react-native-gesture-handler';
 import { ProgressCard } from '../components/ProgressCard';
-import { postSelectAllStudentCheckIn } from '../hooks/Services';
-import { StringDateDiff } from '../hooks/BeautyDate';
+import { postSelectAllStudentCheckIn } from '../services/Services';
+import { StringDateDiff } from '../services/BeautyDate';
 import { app_config } from '../config/app_config';
 import { Avatar, Chip, List, Card } from 'react-native-paper';
 import moment from "moment";
 import LoopText from 'react-native-loop-text';
+import { LinearGradient } from 'expo-linear-gradient';
+import { UserContext } from '../contexts/UserContext';
 
 export const HomeScreen = (props) => {
-    const [user, setUser] = useState({})
-    const [project, setProject] = useState({})
+    // const [user, setUser] = useState({})
+    // const [project, setProject] = useState({})
     const [refreshing, setRefreshing] = useState(false)
     const [checkIn, setCheckIn] = useState([])
 
+    const { user, project } = useContext(UserContext);
+    console.log('HomeScreen', user, project);
+
     const initData = async () => {
-        const [user_str, project_str] = await Promise.all([
-            AsyncStorage.getItem('user'),
-            AsyncStorage.getItem('project')
-        ])
-
-        console.log(user_str);
-        const user_obj = JSON.parse(user_str)
-        setUser(user_obj)
-
-        console.log(project_str);
-        const project_obj = JSON.parse(project_str)
-        setProject(project_obj)
-
-        const checkin_data = await postSelectAllStudentCheckIn(user_obj['studentId'])
+        const checkin_data = await postSelectAllStudentCheckIn(user['studentId'])
         console.log(checkin_data);
         setCheckIn(checkin_data)
+    }
 
-        if (Object.keys(user_obj).length === 0 && Object.keys(project_obj).length === 0) {
-            props.navigation.navigate('Login', { isLogin: false })
+    useEffect(() => {
+        if (checkIn.length === 0){
+            initData()
         }
-    }
-
-    if (Object.keys(user).length === 0 && Object.keys(project).length === 0) {
-        initData()
-    }
+    }, [])
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -51,18 +41,19 @@ export const HomeScreen = (props) => {
 
 
     const renderItem = ({ item }) => {
-        return <List.Item
-            title={`สัปดาห์ที่ ${item.week_name}`}
-            description={StringDateDiff(moment.unix(item.check_in_date), new Date())}
-            left={props => <List.Icon {...props} icon="check-circle" color={'white'} />}
-            right={props => <List.Icon {...props} icon="chevron-right" color={'white'} />}
-            style={{ backgroundColor: '#3f51b5', marginVertical: 5, borderRadius: 24 }}
-            titleStyle={{ color: '#fff' }}
-            descriptionStyle={{ color: '#fafafa' }}
-            onPress={() => {
-                props.navigation.navigate('CheckIn', { checkIn: item, user: user })
-            }}
-        />;
+        return (
+            <List.Item
+                title={`สัปดาห์ที่ ${item.week_name}`}
+                description={StringDateDiff(moment.unix(item.check_in_date), new Date())}
+                left={props => <List.Icon {...props} icon="check-circle" color={'green'} style={{ height: 50 }} />}
+                right={props => <List.Icon {...props} icon="chevron-right" color={'white'} />}
+                style={{ backgroundColor: '#c89feb', marginVertical: 5, borderRadius: 24 }}
+                titleStyle={{ color: '#fff' }}
+                descriptionStyle={{ color: '#fafafa' }}
+                onPress={() => {
+                    props.navigation.navigate('CheckIn', { checkIn: item, user: user })
+                }}
+            />);
     };
 
     return (
@@ -86,15 +77,24 @@ export const HomeScreen = (props) => {
                 </View>
             </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#3f51b5', padding: 10, marginBottom: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#5d69be', padding: 10, marginBottom: 10 }}>
                 {
-                    user['avartar'] !== null ? <Avatar.Image size={70} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
+                    user['avartar'] !== null ? <Avatar.Image size={42} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
                         : <Avatar.Text size={42} label={user['studentName'][0]} labelStyle={{ fontSize: 14 }} style={{ backgroundColor: 'green' }} />
                 }
                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Chip style={{ height: 24, alignItems: 'center', marginHorizontal: 10 }} textStyle={{ fontSize: 12, color: 'gray' }}>{`${'G' + String(project['groupNo']).padStart(2, '0')}`}</Chip>
-                        <LoopText style={{ fontSize: 14, color: '#fff' }} delay={2000} textArray={[project['projectName'], 'G' + String(project['groupNo']).padStart(2, '0') + " " + user['studentName']]} />
+                        <LoopText style={{ fontSize: 14, color: '#fff' }} delay={2000} textArray={[project['projectName'], user['studentName'] + "  กลุ่ม " + 'G' + String(project['groupNo']).padStart(2, '0')]} />
+                        {/* <TextTicker
+                            duration={3000}
+                            loop
+                            repeatSpacer={5000}
+                            marqueeDelay={1000}
+                            style={{ fontSize: 14, color: '#fff' }}
+                        >
+                            {`${user['studentName']} กลุ่ม G${String(project['groupNo']).padStart(2, '0')} หัวข้อโครงงาน ${project['projectName']} `}
+                        </TextTicker> */}
                     </View>
                 </View>
             </View>
@@ -104,14 +104,14 @@ export const HomeScreen = (props) => {
                 <ScrollView showsVerticalScrollIndicator={false}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <ProgressCard />
-                    <Text>{`📝 เช็คชื่อเข้าพบที่ปรึกษาโครงงาน`}</Text>
+                    <Text>{`เช็คชื่อเข้าพบที่ปรึกษาโครงงาน`}</Text>
                     <View style={{ marginVertical: 10 }}>
                         {
                             checkIn.length !== 0 ? (
                                 <FlatList
                                     data={checkIn}
                                     renderItem={renderItem}
-                                    keyExtractor={item => item.id}
+                                    keyExtractor={item => item.id.toString()}
                                 />
                             ) : (
                                     <Card style={{ flexDirection: 'row', height: 150, padding: 20, backgroundColor: '#eaeaea', alignItems: 'center', borderRadius: 20 }}>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        marginHorizontal: 3
+        marginHorizontal: 3,
     },
     logo: {
         width: 33,
@@ -155,7 +155,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 14,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#34495e'
     },
     subtitle: {
         fontSize: 12,

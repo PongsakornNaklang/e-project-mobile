@@ -1,31 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { View, TouchableOpacity, StyleSheet, AsyncStorage, Text, Image, ActivityIndicator, Alert } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
-import { LoginService, checkLogin } from '../hooks/Services'
+import { LoginService, checkLogin } from '../services/Services'
 import { Button } from 'react-native-paper';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const LogInScreen = (props) => {
-    const [userName, setUserName] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const unmounted = useRef(false);
+    const { onLogin } = useContext(AuthContext);
 
     useEffect(() => {
         return () => { unmounted.current = true }
     }, []);
 
-    const onLogin = async () => {
+    const Login = async () => {
         setLoading(true)
         try {
-            const login = await LoginService(userName, password)
-            if (!login) {
-                Alert.alert('ล็อกอินไม่สำเร็จ', 'โปรดตรวจสอบชื่อผู้ใช้และรหัสผ่าน')
-            } else {
-                const isLogin = await checkLogin()
-                props.navigation.navigate('Home', { isLogin })
-            }
-            console.log('onLogin', login)
+           await onLogin(username, password)
         } catch (error) {
+            Alert.alert('ล็อกอินไม่สำเร็จ', 'โปรดตรวจสอบชื่อผู้ใช้และรหัสผ่าน')
             console.log('error', error)
         }
         
@@ -39,9 +35,9 @@ export const LogInScreen = (props) => {
             <Image style={styles.logo} source={require('./../assets/logo.png')} />
             <Text style={styles.titleText}>สวัสดี ยินดีต้อนรับเข้าสู่ E-Project</Text>
             <TextInput
-                value={userName}
+                value={username}
                 keyboardType='email-address'
-                onChangeText={(email) => setUserName(email)}
+                onChangeText={(value) => setUsername(value)}
                 placeholder='ชื่อผู้ใช้'
                 placeholderTextColor='#333333'
                 style={styles.input}
@@ -54,7 +50,7 @@ export const LogInScreen = (props) => {
                 secureTextEntry={true}
                 style={styles.input}
             />
-            <Button style={styles.button} mode="contained" loading={loading} onPress={() => onLogin()}>
+            <Button style={styles.button} mode="contained" loading={loading} onPress={() => Login()}>
                 เข้าสู่ระบบ
             </Button>
 

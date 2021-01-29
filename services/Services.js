@@ -12,8 +12,8 @@ export const setStorage = async (name, obj_value) => {
 
 export const checkLogin = async () => {
     try {
-        const token =  await AsyncStorage.getItem('token')
-        return (token ? true: false)
+        const token = await AsyncStorage.getItem('token')
+        return (token ? true : false)
     } catch (error) {
     }
     return false
@@ -26,37 +26,44 @@ export const LoginService = async (username, password) => {
     try {
         let res = await fetch(app_config.api + '/auth/login', { method: 'post', headers, body: JSON.stringify(params) })
         let data = await res.json()
-        console.log(data);
         if (data) {
-            const { user, token } = data
-            if (user && token && user.role === 'student') {
-                await Promise.all([
-                    setStorage('user', user),
-                    setStorage('token', token),
-                    setProjectStorage(user.studentId)
-                ])
-                return true
-            }
+            // const { user, token } = data
+            // if (user && token && user.role === 'student') {
+            //     await Promise.all([
+            //         setStorage('user', user),
+            //         setStorage('token', token),
+            //         setProjectStorage(user.studentId)
+            //     ])
+            //     return true
+            // }
+            return data
         }
     } catch (error) {
-        Alert.alert('Login', error)
     }
-    return false
+    return undefined
 }
 
 export const logout = async () => {
     try {
-        // await Promise.all([
-        //     setStorage('user', {}),
-        //     setStorage('token', {}),
-        //     setStorage('project',{})
-        // ])
         await AsyncStorage.clear()
         return true
     } catch (error) {
         Alert.alert('Logout', error)
     }
     return false
+}
+
+export const ProjectService = async (studentId) => {
+    const params = { studentId }
+    console.log(JSON.stringify(params));
+    try {
+        const res = await fetch(app_config.api + '/projects/getProjectDetailForStudent', { method: 'POST', headers, body: JSON.stringify(params) })
+        const data = await res.json()
+        console.log(data);
+        return data
+    } catch (error) {
+    }
+    return undefined
 }
 
 export const setProjectStorage = async (studentId) => {
@@ -72,8 +79,8 @@ export const setProjectStorage = async (studentId) => {
 
 export const insertStudentCheckIn = async (week_name, advisor_id, student_id, callback) => {
     const params = { week_name, advisor_id, student_id }
-    const res = await fetch(app_config.api + "/studentplan/v2/insertStudentCheckIn",  { method: 'POST', headers, body: JSON.stringify(params) })
-    const data =  await res.json()
+    const res = await fetch(app_config.api + "/studentplan/v2/insertStudentCheckIn", { method: 'POST', headers, body: JSON.stringify(params) })
+    const data = await res.json()
 
     if (data) {
         callback(data.result)
@@ -84,8 +91,8 @@ export const insertStudentCheckIn = async (week_name, advisor_id, student_id, ca
 
 export const checkStudentCheckIn = async (week_name, student_id, callback) => {
     const params = { week_name, student_id }
-    const res = await fetch(app_config.api + "/studentplan/v2/checkStudentCheckIn", { method: 'POST', headers, body: JSON.stringify(params) } )
-    const data =  await res.json()
+    const res = await fetch(app_config.api + "/studentplan/v2/checkStudentCheckIn", { method: 'POST', headers, body: JSON.stringify(params) })
+    const data = await res.json()
     if (data) {
         callback(data.result)
     } else {

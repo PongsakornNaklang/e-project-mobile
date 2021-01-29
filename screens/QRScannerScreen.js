@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, AsyncStorage, Dimensions, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { decode, encode } from 'base-64'
-import { insertStudentCheckIn, checkStudentCheckIn } from '../hooks/Services';
+import { insertStudentCheckIn, checkStudentCheckIn } from '../services/Services';
 
 export const QRScannerScreen = (props) => {
     const [hasPermission, setHasPermission] = useState(null);

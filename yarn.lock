@@ -5713,11 +5713,6 @@ react-native-swiper@^1.6.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-text-ticker@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-text-ticker/-/react-native-text-ticker-1.11.0.tgz#d1711613b4cd6f0ffa0a7335f8de172f5e63190f"
-  integrity sha512-+lDX7HO4qTPjMhHDzLYU39YWMqqrud2rs3aBdXnJPqcsWbEpOabogNuYQB6XZ/oqe2kSgqOJlVEH4nbNd1+AwQ==
-
 react-native-user-avatar@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/react-native-user-avatar/-/react-native-user-avatar-1.0.7.tgz#be7a3912e3babad8780c8b83cff9a7e14d15cff7"
