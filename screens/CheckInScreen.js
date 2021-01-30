@@ -9,9 +9,10 @@ export const CheckInScreen = (props) => {
     const { checkIn, user } = props.route.params
 
     console.log(checkIn);
+
+    console.log(checkIn);
     return (
         <View>
-
             <Card style={{ flexDirection: 'row', margin: 20, backgroundColor: '#ffff', borderRadius: 20 }}>
                 <LinearGradient
                     colors={['#5d69be', '#c89feb']}
@@ -44,7 +45,6 @@ export const CheckInScreen = (props) => {
                     </View>
                 </LinearGradient>
             </Card>
-
         </View>
     )
 }

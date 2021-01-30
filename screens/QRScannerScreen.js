@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button, AsyncStorage, Dimensions, Alert } from 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { decode, encode } from 'base-64'
 import { insertStudentCheckIn, checkStudentCheckIn } from '../services/Services';
+import { Theme } from '../contexts/theme';
 
 export const QRScannerScreen = (props) => {
     const [hasPermission, setHasPermission] = useState(null);
@@ -59,7 +60,7 @@ export const QRScannerScreen = (props) => {
     return (
         <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={[StyleSheet.absoluteFillObject, styles.container]}
+            style={[StyleSheet.absoluteFillObject]}
 
         >
             <View style={styles.layerTop} />

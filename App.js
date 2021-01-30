@@ -32,7 +32,7 @@ export default function App() {
 
     )
       : (
-        <Stack.Navigator initialRouteName={"Login"}  >
+        <Stack.Navigator initialRouteName={"OnBoarding"}  >
           <Stack.Screen name="OnBoarding" component={OnBoardingScreen} options={{ headerShown: false }} />
           < Stack.Screen name="Login" component={LogInScreen} options={{ headerShown: false }
           } />

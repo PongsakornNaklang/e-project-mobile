@@ -1,24 +1,6 @@
 import { app_config } from "../config/app_config"
 import axios from "axios"
 import { AsyncStorage, Alert } from "react-native"
-
-export const setStorage = async (name, obj_value) => {
-    try {
-        await AsyncStorage.setItem(name, JSON.stringify(obj_value))
-    } catch (error) {
-        console.log('[!] SetStorage(' + name + ') >> ', error);
-    }
-}
-
-export const checkLogin = async () => {
-    try {
-        const token = await AsyncStorage.getItem('token')
-        return (token ? true : false)
-    } catch (error) {
-    }
-    return false
-}
-
 const headers = { 'Content-Type': 'application/json;charset=utf-8' }
 
 export const LoginService = async (username, password) => {
@@ -27,30 +9,11 @@ export const LoginService = async (username, password) => {
         let res = await fetch(app_config.api + '/auth/login', { method: 'post', headers, body: JSON.stringify(params) })
         let data = await res.json()
         if (data) {
-            // const { user, token } = data
-            // if (user && token && user.role === 'student') {
-            //     await Promise.all([
-            //         setStorage('user', user),
-            //         setStorage('token', token),
-            //         setProjectStorage(user.studentId)
-            //     ])
-            //     return true
-            // }
             return data
         }
     } catch (error) {
     }
     return undefined
-}
-
-export const logout = async () => {
-    try {
-        await AsyncStorage.clear()
-        return true
-    } catch (error) {
-        Alert.alert('Logout', error)
-    }
-    return false
 }
 
 export const ProjectService = async (studentId) => {
@@ -64,17 +27,6 @@ export const ProjectService = async (studentId) => {
     } catch (error) {
     }
     return undefined
-}
-
-export const setProjectStorage = async (studentId) => {
-    const params = { studentId }
-    try {
-        const res = await fetch(app_config.api + '/projects/getProjectDetailForStudent', { method: 'POST', headers, body: JSON.stringify(params) })
-        const data = await res.json()
-        setStorage('project', data)
-    } catch (error) {
-        console.log('[!] setProjectStorage ', error);
-    }
 }
 
 export const insertStudentCheckIn = async (week_name, advisor_id, student_id, callback) => {

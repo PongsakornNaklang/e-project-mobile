@@ -10,12 +10,9 @@ import { app_config } from '../config/app_config';
 import { Avatar, Chip, List, Card } from 'react-native-paper';
 import moment from "moment";
 import LoopText from 'react-native-loop-text';
-import { LinearGradient } from 'expo-linear-gradient';
 import { UserContext } from '../contexts/UserContext';
 
 export const HomeScreen = (props) => {
-    // const [user, setUser] = useState({})
-    // const [project, setProject] = useState({})
     const [refreshing, setRefreshing] = useState(false)
     const [checkIn, setCheckIn] = useState([])
 
@@ -23,13 +20,18 @@ export const HomeScreen = (props) => {
     console.log('HomeScreen', user, project);
 
     const initData = async () => {
-        const checkin_data = await postSelectAllStudentCheckIn(user['studentId'])
-        console.log(checkin_data);
-        setCheckIn(checkin_data)
+        try {
+            const checkin_data = await postSelectAllStudentCheckIn(user['studentId'])
+            console.log(checkin_data);
+            setCheckIn(checkin_data)
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
     useEffect(() => {
-        if (checkIn.length === 0){
+        if (checkIn.length === 0) {
             initData()
         }
     }, [])
@@ -65,8 +67,7 @@ export const HomeScreen = (props) => {
                     </View>
                 </TouchableNativeFeedback>
                 <View style={styles.logo_container}>
-                    <Image style={styles.logo} source={require('./../assets/logo.png')} />
-                    <Text>E-PROJECT</Text>
+                    <Image style={styles.logo} source={require('./../assets/logo-outline-h.png')} />
                 </View>
                 <View style={styles.icon_right}>
                     <TouchableNativeFeedback onPress={() => props.navigation.navigate('QRCode')} background={TouchableNativeFeedback.Ripple('#777', true)} >
@@ -86,15 +87,6 @@ export const HomeScreen = (props) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Chip style={{ height: 24, alignItems: 'center', marginHorizontal: 10 }} textStyle={{ fontSize: 12, color: 'gray' }}>{`${'G' + String(project['groupNo']).padStart(2, '0')}`}</Chip>
                         <LoopText style={{ fontSize: 14, color: '#fff' }} delay={2000} textArray={[project['projectName'], user['studentName'] + "  กลุ่ม " + 'G' + String(project['groupNo']).padStart(2, '0')]} />
-                        {/* <TextTicker
-                            duration={3000}
-                            loop
-                            repeatSpacer={5000}
-                            marqueeDelay={1000}
-                            style={{ fontSize: 14, color: '#fff' }}
-                        >
-                            {`${user['studentName']} กลุ่ม G${String(project['groupNo']).padStart(2, '0')} หัวข้อโครงงาน ${project['projectName']} `}
-                        </TextTicker> */}
                     </View>
                 </View>
             </View>
@@ -104,15 +96,18 @@ export const HomeScreen = (props) => {
                 <ScrollView showsVerticalScrollIndicator={false}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <ProgressCard />
-                    <Text>{`เช็คชื่อเข้าพบที่ปรึกษาโครงงาน`}</Text>
+                    
                     <View style={{ marginVertical: 10 }}>
                         {
                             checkIn.length !== 0 ? (
-                                <FlatList
-                                    data={checkIn}
-                                    renderItem={renderItem}
-                                    keyExtractor={item => item.id.toString()}
-                                />
+                                <SafeAreaView style={{ flex: 1}}>
+                                    <FlatList
+                                        data={checkIn}
+                                        renderItem={renderItem}
+                                        keyExtractor={item => String(item.id)}
+                                        ListHeaderComponent={()=><Text>{`เช็คชื่อเข้าพบที่ปรึกษาโครงงาน`}</Text>}
+                                    />
+                                </SafeAreaView>
                             ) : (
                                     <Card style={{ flexDirection: 'row', height: 150, padding: 20, backgroundColor: '#eaeaea', alignItems: 'center', borderRadius: 20 }}>
                                         <Text style={{ color: 'gray', alignSelf: 'center' }}>{'ไม่พบข้อมูลการเช็คชื่อ'}</Text>
@@ -138,9 +133,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 3,
     },
     logo: {
-        width: 33,
+        width: 100,
         height: 33,
         marginHorizontal: 10,
+        resizeMode: 'contain'
     },
     logo_container: {
         flexDirection: 'row',

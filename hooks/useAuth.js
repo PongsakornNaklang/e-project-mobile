@@ -9,34 +9,35 @@ export const useAuth = () => {
                 case 'LOG_IN':
                     return {
                         ...prevState,
-                        isLogin: false,
+                        isLoading: true,
                         user: action.user,
                         project: action.project,
                     };
                 case 'SET_USER':
                     return {
                         ...prevState,
+                        isLoading: true,
                         user: action.user,
                         project: action.project,
                     };
                 case 'REMOVE_USER':
                     return {
                         ...prevState,
+                        isLoading: true,
                         user: null,
                         project: null,
                     };
                 case 'LOG_OUT':
                     return {
                         ...prevState,
-                        isLogout: true,
+                        isLoading: true,
                         user: null,
                         project: null,
                     };
             }
         },
         {
-            isLoading: true,
-            isLogout: false,
+            isLoading: false,
             user: null,
             project: null,
         }

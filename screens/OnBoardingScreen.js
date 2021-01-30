@@ -1,24 +1,30 @@
 import React from 'react'
-import { View, StyleSheet, Dimensions, Image, Button } from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, StyleSheet, Dimensions, Image } from 'react-native'
+import { Button, Paragraph } from 'react-native-paper';
+import { Theme } from '../contexts/theme';
 
 export const OnBoardingScreen = (props) => {
     return (
-        <LinearGradient
-            colors={['#5d69be', '#c89feb', 'transparent']}
-            style={styles.background}
-        >
-            <View>
-                <Image style={{ width: 240, height: 80, alignSelf: 'flex-start', margin: 20 }} source={require('../assets/logo_white.png')} />
-                <Button
-                    title={'เข้าสู่ระบบ'}
-                    onPress={()=> props.navigation.navigate('Home')}
-                />
-                <Button
-                    title={'สมัครสมาชิก'}
-                />
-            </View>
-        </LinearGradient>
+        <View style={styles.background}>
+            <Image style={styles.logo} source={require('../assets/logo-outline-v.png')} />
+            <Paragraph style={styles.paragraph}>
+                แอปพลิเคชั่นสำหรับเช็คชื่อในระบบ E-Project ด้วยการสแกน QRCode
+            </Paragraph>
+            <Button
+                mode="contained"
+                style={styles.button}
+                onPress={() => props.navigation.navigate('Login')}
+            >
+                {'เข้าสู่ระบบ'}
+            </Button>
+            <Button
+                mode={'outlined'}
+                onPress={() => { }}
+
+            >
+                {'สมัครสมาชิก'}
+            </Button>
+        </View>
     )
 }
 
@@ -29,4 +35,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: Dimensions.get('screen').height,
     },
+    logo: {
+        width: 170,
+        height: 170,
+        resizeMode: 'contain',
+        alignSelf: 'center'
+    },
+    paragraph: {
+        color: Theme.colors.secondary,
+        marginVertical: 30,
+        marginHorizontal: 30,
+        textAlign: 'center'
+    },
+    button: {
+        marginVertical: 10
+    }
 });

@@ -1,21 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, useIsDrawerOpen } from '@react-navigation/drawer'
-import { View, StyleSheet, Text, AsyncStorage, Alert, Image } from 'react-native'
+import { View, StyleSheet, Text, AsyncStorage, Alert, Image, Button } from 'react-native'
 import UserAvatar from 'react-native-user-avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faQrcode, faCog, faSignOutAlt, faUserFriends, faSearch, faUserCheck } from '@fortawesome/free-solid-svg-icons';
-import { logout, checkLogin } from '../services/Services';
+import { faHome,  faSignOutAlt, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import { app_config } from '../config/app_config';
-import { Avatar } from 'react-native-paper';
+import { Avatar,  } from 'react-native-paper';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserContext } from '../contexts/UserContext';
 
 export const DrawerContent = (props) => {
-    const isDrawerOpen = useIsDrawerOpen();
     const { onLogout } = useContext(AuthContext);
     const { user, project } = useContext(UserContext);
-
-    if (isDrawerOpen) {
+    const Logout = async () => {
+        try {
+            await onLogout()
+        } catch (error) {
+            console.log('error', error)
+        }
     }
 
     return (
@@ -60,7 +62,7 @@ export const DrawerContent = (props) => {
                         <FontAwesomeIcon icon={faSignOutAlt} size={size} color={'#3f51b5'} />
                     )}
                     label='ออกจากระบบ'
-                    onPress={async () => await onLogout()} />
+                    onPress={Logout} />
             </View>
         </View>
     )
