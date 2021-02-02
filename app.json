@@ -3,7 +3,7 @@
     "name": "E-project",
     "slug": "E-project",
     "version": "1.0.0",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/logo-pure.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
