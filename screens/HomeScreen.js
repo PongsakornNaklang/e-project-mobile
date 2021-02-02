@@ -87,8 +87,8 @@ export const HomeScreen = (props) => {
             </View>
 
 
-            <SafeAreaView style={styles.body}>
-                <ScrollView showsVerticalScrollIndicator={false}
+            <SafeAreaView>
+                <ScrollView style={styles.body} showsVerticalScrollIndicator={false}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <ProgressCard />
 
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
         marginBottom: -30
     },
     body: {
-        flex: 1,
-        backgroundColor: '#ffffff',
+        flexGrow: 1,
+        backgroundColor: '#fff',
         marginLeft: 0,
-        padding: 10
+        padding: 10, 
     },
 })
