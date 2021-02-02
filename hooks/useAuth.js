@@ -1,6 +1,6 @@
 import React from 'react'
 import { LoginService, ProjectService } from '../services/Services';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Alert } from 'react-native';
 
 export const useAuth = () => {
     const [state, dispatch] = React.useReducer(
@@ -64,38 +64,58 @@ export const useAuth = () => {
     const auth = React.useMemo(
         () => ({
             onLogin: async (username, password) => {
-                const { user, token } = await LoginService(username, password)
-                console.log(user.studentId);
-                let project
-                if (user) {
-                    project = await ProjectService(user.studentId)
+                try {
+                    const { user, token } = await LoginService(username, password)
+                    console.log(user.studentId);
+
+                    if (user.studentId) {
+                        const project = await ProjectService(user.studentId)
+                        await Promise.all([
+                            AsyncStorage.setItem('user', JSON.stringify(user)),
+                            AsyncStorage.setItem('project', JSON.stringify(project))
+                        ])
+                        dispatch({ type: 'LOG_IN', user: user, project: project })
+                    } else {
+                        throw 'not student'
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                    if (error == 'not student') {
+                        Alert.alert('เข้าสู่ระบบไม่สำเร็จ!', 'เข้าสู่ระบบได้เฉพาะบัญชีนักศึกษาเท่านั้น', [{ text: 'ปิด', style: "cancel" }])
+                    } else {
+                        Alert.alert('เข้าสู่ระบบไม่สำเร็จ!', 'ชื่อผู้ใช้หรือรหัสผ่านใหม่ไม่ถูกต้อง', [{ text: 'ปิด', style: "cancel" }])
+                    }
                 }
-                await Promise.all([
-                    AsyncStorage.setItem('user', JSON.stringify(user)),
-                    AsyncStorage.setItem('project', JSON.stringify(project))
-                ])
-                dispatch({ type: 'LOG_IN', user: user, project: project })
             },
-            onLogout: async () => {
-                await Promise.all([
-                    AsyncStorage.removeItem('user'),
-                    AsyncStorage.removeItem('project')
-                ])
-                dispatch({ type: 'LOG_OUT' })
+            onLogout: () => {
+                Alert.alert(
+                    "ยืนยันการออกจากระบบ",
+                    "คุณต้องการออกจากระบบใช่หรือไม่ ? ",
+                    [
+                        {
+                            text: "ไม่",
+                            onPress: () => { },
+                            style: "cancel"
+                        },
+                        {
+                            text: "ใช่",
+                            onPress: async () => {
+                                await Promise.all([
+                                    AsyncStorage.removeItem('user'),
+                                    AsyncStorage.removeItem('project')
+                                ])
+                                dispatch({ type: 'LOG_OUT' })
+                            },
+                        }
+                    ],
+                    { cancelable: false }
+                );
+
             },
         }),
         []
     );
 
     return { auth, state }
-}
-
-
-const temp = {
-    id: '1d4e6f46-7419-4530-b752-7991aa5c070f',
-    username: 'bank1',
-    role: 'student',
-    studentId: 'B6070555',
-    studentName: 'นัฐวุฒิn นาคขุนทด',
-    avartar: null
 }

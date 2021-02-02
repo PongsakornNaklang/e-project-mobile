@@ -9,9 +9,6 @@ export const ProgressCard = () => {
     const [weekProgreess, setWeekProgress] = useState()
     const [currentWeek, setCurrentWeek] = useState(0)
 
-    
-
-
     const getProgessPercent = async (teamId, callback) => {
         const res = await postselectProgressPercent(teamId)
         if (res) {

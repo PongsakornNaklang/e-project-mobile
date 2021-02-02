@@ -4,7 +4,8 @@ import { Button, TextInput, DefaultTheme } from 'react-native-paper';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserContext } from '../contexts/UserContext';
 import { Spinner } from '../components/Spinner';
-import { Theme } from '../contexts/theme';
+import { Theme } from '../components/Theme';
+import * as WebBrowser from 'expo-web-browser';
 
 export const LogInScreen = (props) => {
     const [username, setUsername] = useState('')
@@ -16,15 +17,14 @@ export const LogInScreen = (props) => {
     console.log(data);
 
     const Login = async () => {
-        try {
-            setLoading(true)
-            await onLogin(username, password)
-        } catch (error) {
-            Alert.alert('เข้าสู่ระบบไม่สำเร็จ 😓', 'โปรดตรวจสอบชื่อผู้ใช้และรหัสผ่านใหม่')
-            console.log('error', error)
-            setLoading(false)
-        }
+        setLoading(true)
+        await onLogin(username, password)
+        setLoading(false)
     }
+
+    const onOpenRegister = async () => {
+        const result = await WebBrowser.openBrowserAsync('http://it2.sut.ac.th/project63_g40/register');
+      };
 
     return (
         <View style={styles.container}>
@@ -61,7 +61,7 @@ export const LogInScreen = (props) => {
 
             <View style={styles.signup}>
                 <Text style={styles.label}>คุณยังไม่มีบัญชีใช่ไหม ? </Text>
-                <TouchableOpacity onPress={() => { }}>
+                <TouchableOpacity onPress={onOpenRegister}>
                     <Text style={styles.link}>สมัครสมาชิก</Text>
                 </TouchableOpacity>
             </View>

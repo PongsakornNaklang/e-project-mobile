@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, Button, AsyncStorage, Dimensions, Alert } from 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { decode, encode } from 'base-64'
 import { insertStudentCheckIn, checkStudentCheckIn } from '../services/Services';
-import { Theme } from '../contexts/theme';
 
 export const QRScannerScreen = (props) => {
     const [hasPermission, setHasPermission] = useState(null);
@@ -40,7 +39,7 @@ export const QRScannerScreen = (props) => {
                         Alert.alert('เช็คชื่อ', `เช็คชื่อประจำสัปดาห์ที่ ${week_name} ไม่สำเร็จ 🤣`)
                     }
                 })
-            }else{
+            } else {
                 Alert.alert('เช็คชื่อ', `คุณได้เช็คชื่อประจำสัปดาห์ที่ ${week_name} แล้ว`)
                 props.navigation.navigate('Home')
             }
@@ -61,7 +60,7 @@ export const QRScannerScreen = (props) => {
         <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             style={[StyleSheet.absoluteFillObject]}
-
+            BarCodeSize={{ height: Dimensions.get("screen").height, width: Dimensions.get('screen').width }}
         >
             <View style={styles.layerTop} />
             <View style={styles.layerCenter}>

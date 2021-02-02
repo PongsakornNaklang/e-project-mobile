@@ -6,11 +6,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ProgressCard } from '../components/ProgressCard';
 import { postSelectAllStudentCheckIn } from '../services/Services';
 import { StringDateDiff } from '../services/BeautyDate';
-import { app_config } from '../config/app_config';
 import { Avatar, Chip, List, Card } from 'react-native-paper';
 import moment from "moment";
 import LoopText from 'react-native-loop-text';
 import { UserContext } from '../contexts/UserContext';
+import { AvatarUser } from '../components/AvatarUser';
+import { QRCodeFeb } from '../components/QRCodeFeb';
+import { ThemeColors } from 'react-navigation';
+import { Theme } from '../components/Theme';
 
 export const HomeScreen = (props) => {
     const [refreshing, setRefreshing] = useState(false)
@@ -70,19 +73,11 @@ export const HomeScreen = (props) => {
                     <Image style={styles.logo} source={require('./../assets/logo-outline-h.png')} />
                 </View>
                 <View style={styles.icon_right}>
-                    <TouchableNativeFeedback onPress={() => props.navigation.navigate('QRCode')} background={TouchableNativeFeedback.Ripple('#777', true)} >
-                        <View style={styles.icon_button}>
-                            <FontAwesomeIcon icon={faQrcode} size={25} color='#333' />
-                        </View>
-                    </TouchableNativeFeedback>
                 </View>
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#5d69be', padding: 10, marginBottom: 10 }}>
-                {
-                    user['avartar'] !== null ? <Avatar.Image size={42} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
-                        : <Avatar.Text size={42} label={user['studentName'][0]} labelStyle={{ fontSize: 14 }} style={{ backgroundColor: 'green' }} />
-                }
+                <AvatarUser name={user.studentName} avatar={user.avartar} />
                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Chip style={{ height: 24, alignItems: 'center', marginHorizontal: 10 }} textStyle={{ fontSize: 12, color: 'gray' }}>{`${'G' + String(project['groupNo']).padStart(2, '0')}`}</Chip>
@@ -96,16 +91,16 @@ export const HomeScreen = (props) => {
                 <ScrollView showsVerticalScrollIndicator={false}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <ProgressCard />
-                    
+
                     <View style={{ marginVertical: 10 }}>
                         {
                             checkIn.length !== 0 ? (
-                                <SafeAreaView style={{ flex: 1}}>
+                                <SafeAreaView style={{ flex: 1 }}>
                                     <FlatList
                                         data={checkIn}
                                         renderItem={renderItem}
                                         keyExtractor={item => String(item.id)}
-                                        ListHeaderComponent={()=><Text>{`เช็คชื่อเข้าพบที่ปรึกษาโครงงาน`}</Text>}
+                                        ListHeaderComponent={() => <Text>{`เช็คชื่อเข้าพบที่ปรึกษาโครงงาน`}</Text>}
                                     />
                                 </SafeAreaView>
                             ) : (
@@ -119,6 +114,7 @@ export const HomeScreen = (props) => {
                     </View>
                 </ScrollView>
             </SafeAreaView>
+            <QRCodeFeb onPress={()=> props.navigation.navigate('QRCode')} />
         </View>
     )
 }

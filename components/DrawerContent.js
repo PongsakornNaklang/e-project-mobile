@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, useIsDrawerOpen } from '@react-navigation/drawer'
 import { View, StyleSheet, Text, AsyncStorage, Alert, Image, Button } from 'react-native'
-import UserAvatar from 'react-native-user-avatar';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome,  faSignOutAlt, faUserCheck } from '@fortawesome/free-solid-svg-icons';
-import { app_config } from '../config/app_config';
-import { Avatar,  } from 'react-native-paper';
+import { faHome,  faSignOutAlt, faUserCheck, faCog, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserContext } from '../contexts/UserContext';
+import { Theme } from './Theme';
+import { AvatarUser } from './AvatarUser';
 
 export const DrawerContent = (props) => {
     const { onLogout } = useContext(AuthContext);
     const { user, project } = useContext(UserContext);
+
     const Logout = async () => {
         try {
             await onLogout()
@@ -28,12 +28,7 @@ export const DrawerContent = (props) => {
         }}>
             <DrawerContentScrollView {...props} >
                 <View style={styles.head}>
-                    {
-                        user['avartar'] !== null ? <Avatar.Image size={50} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
-                            : <Avatar.Text size={50} label={user['studentName'][0]} labelStyle={{ fontSize: 14 }} style={{ backgroundColor: 'green' }} />
-                    }
-                    {/* <UserAvatar style={styles.avatar} src={user['avartar'] != null ? `${app_config.api}/public/profile/${user['avartar']}`: null} name={user['studentName']}  /> */}
-                    {/* <Image source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} style={{ width: 50, height: 50, borderRadius: 50 }} /> */}
+                    <AvatarUser name={user.studentName} avatar={user.avartar} />
                     <Text style={styles.subtitle}>{user != null ? user['studentId'] : null}</Text>
                     <Text style={styles.title}>{user != null ? user['studentName'] : null}</Text>
                     <Text style={styles.title}>{project != null ? 'G' + String(project['groupNo']).padStart(2, '0') : null}</Text>
@@ -42,24 +37,24 @@ export const DrawerContent = (props) => {
                 <View style={styles.drawer_section}>
                     <DrawerItem
                         icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faHome} size={size} color={'#3f51b5'} />
+                            <FontAwesomeIcon icon={faHome} size={size} color={Theme.colors.primary} />
                         )}
                         label="หน้าแรก"
                         onPress={() => { props.navigation.navigate('Home') }}
                     />
                     <DrawerItem
                         icon={({ color, size }) => (
-                            <FontAwesomeIcon icon={faUserCheck} size={size} color={'#3f51b5'} />
+                            <FontAwesomeIcon icon={faQrcode} size={size} color={Theme.colors.primary} />
                         )}
-                        label="เช็คการเข้าพบที่ปรึกษา"
-                        onPress={() => { props.navigation.navigate('CheckSign') }}
+                        label="สแกน QRCode เช็คชื่อ"
+                        onPress={() => { props.navigation.navigate('QRCode') }}
                     />
                 </View>
             </DrawerContentScrollView>
             <View style={styles.bottom_section}>
                 <DrawerItem
                     icon={({ color, size }) => (
-                        <FontAwesomeIcon icon={faSignOutAlt} size={size} color={'#3f51b5'} />
+                        <FontAwesomeIcon icon={faSignOutAlt} size={size} color={Theme.colors.primary} />
                     )}
                     label='ออกจากระบบ'
                     onPress={Logout} />

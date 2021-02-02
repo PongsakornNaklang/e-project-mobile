@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
-import { Theme } from '../contexts/theme';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { Theme } from './Theme';
 
 export const Spinner = ({ loading }) => {
   if (!loading) {
@@ -19,7 +19,7 @@ export const Spinner = ({ loading }) => {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     alignItems: 'center',
     justifyContent: 'center',
   },

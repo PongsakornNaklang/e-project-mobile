@@ -5,15 +5,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './components/DrawerContent';
 import { HomeStackNavigator } from './navigator/HomeStackNavigator';
 import { QRScannerScreen } from './screens/QRScannerScreen';
-import { createStackNavigator } from '@react-navigation/stack';
-import { LogInScreen } from './screens/LogInScreen';
-import { OnBoardingScreen } from './screens/OnBoardingScreen';
 import { AuthContext } from './contexts/AuthContext';
 import { UserContext } from './contexts/UserContext';
 import { useAuth } from './hooks/useAuth';
+import { LoginStackNavigator } from './navigator/LoginStackNavigator';
 
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
 
 export default function App() {
   const { auth, state } = useAuth();
@@ -32,11 +29,7 @@ export default function App() {
 
     )
       : (
-        <Stack.Navigator initialRouteName={"OnBoarding"}  >
-          <Stack.Screen name="OnBoarding" component={OnBoardingScreen} options={{ headerShown: false }} />
-          < Stack.Screen name="Login" component={LogInScreen} options={{ headerShown: false }
-          } />
-        </Stack.Navigator >
+        <LoginStackNavigator />
       )
   }
 

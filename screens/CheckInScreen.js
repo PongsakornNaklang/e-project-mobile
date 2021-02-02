@@ -1,32 +1,29 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Text, Card, Title, Chip, Subheading, Avatar } from 'react-native-paper'
+import { Text, Card, Title, Chip } from 'react-native-paper'
 import { StringDateDiff } from '../services/BeautyDate'
 import moment from "moment";
 import { LinearGradient } from 'expo-linear-gradient';
+import { AvatarUser } from '../components/AvatarUser';
 
 export const CheckInScreen = (props) => {
     const { checkIn, user } = props.route.params
 
-    console.log(checkIn);
+    console.log('CheckInScreen', checkIn);
 
-    console.log(checkIn);
     return (
         <View>
-            <Card style={{ flexDirection: 'row', margin: 20, backgroundColor: '#ffff', borderRadius: 20 }}>
+            <Card style={styles.container}>
                 <LinearGradient
                     colors={['#5d69be', '#c89feb']}
-                    style={{ padding: 20,borderRadius: 20 }}
+                    style={{ padding: 20, borderRadius: 20 }}
                 >
                     <Title style={styles.text}>{'สัปดาห์ที่ '}{checkIn.week_name}</Title>
                     <Text style={styles.text} >{'เช็คชื่อเมื่อ '}{StringDateDiff(moment.unix(checkIn.check_in_date), new Date())}</Text>
 
-                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginVertical: 10, marginBottom: 20 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {
-                                user['avartar'] !== null ? <Avatar.Image size={50} source={{ uri: `${app_config.api}/public/profile/${user['avartar']}` }} />
-                                    : <Avatar.Text size={50} label={user['studentName'][0]} labelStyle={{ fontSize: 24 }} style={{ backgroundColor: 'green' }} />
-                            }
+                    <View style={styles.row}>
+                        <View style={styles.innerRow}>
+                            <AvatarUser name={user.studentName} avatar={user.avartar} />
                             <Text style={[styles.text, { marginHorizontal: 10 }]}>{user['studentName']}</Text>
                             <Chip style={{ height: 24, alignItems: 'center' }} textStyle={{ fontSize: 12, color: 'gray' }}>{`${String(user['studentId'])}`}</Chip>
                         </View>
@@ -34,12 +31,9 @@ export const CheckInScreen = (props) => {
 
                     <Text style={styles.text}>{'ผู้เช็คชื่อ'}</Text>
 
-                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginVertical: 10 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {
-                                checkIn['advisor_avartar'] !== null ? <Avatar.Image size={50} source={{ uri: `${app_config.api}/public/profile/${checkIn['advisor_avartar']}` }} />
-                                    : <Avatar.Text size={50} label={checkIn['advisor_name'][0]} labelStyle={{ fontSize: 24 }} style={{ backgroundColor: 'green' }} />
-                            }
+                    <View style={styles.row}>
+                        <View style={styles.innerRow}>
+                            <AvatarUser name={checkIn.advisor_name} avatar={checkIn.advisor_avartar} />
                             <Text style={[styles.text, { marginHorizontal: 10 }]}>{checkIn['advisor_name']}</Text>
                         </View>
                     </View>
@@ -50,7 +44,24 @@ export const CheckInScreen = (props) => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        margin: 20,
+        backgroundColor: '#ffff',
+        borderRadius: 20
+    },
     text: {
         color: '#fff'
     },
+    row: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        marginVertical: 10,
+        marginBottom: 20
+    },
+    innerRow: {
+        flexDirection: 'row',
+        alignItems: 'center'
+
+    }
 })

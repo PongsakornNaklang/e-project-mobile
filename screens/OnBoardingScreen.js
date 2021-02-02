@@ -1,9 +1,14 @@
 import React from 'react'
 import { View, StyleSheet, Dimensions, Image } from 'react-native'
 import { Button, Paragraph } from 'react-native-paper';
-import { Theme } from '../contexts/theme';
+import * as WebBrowser from 'expo-web-browser';
+import { Theme } from '../components/Theme';
 
 export const OnBoardingScreen = (props) => {
+    const onOpenRegister = async () => {
+        await WebBrowser.openBrowserAsync('http://it2.sut.ac.th/project63_g40/register');
+      };
+
     return (
         <View style={styles.background}>
             <Image style={styles.logo} source={require('../assets/logo-outline-v.png')} />
@@ -19,8 +24,7 @@ export const OnBoardingScreen = (props) => {
             </Button>
             <Button
                 mode={'outlined'}
-                onPress={() => { }}
-
+                onPress={onOpenRegister}
             >
                 {'สมัครสมาชิก'}
             </Button>
